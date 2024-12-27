@@ -1,4 +1,5 @@
 const User = require('../model/userSchema')
+const jwt = require('jsonwebtoken')
 const registerUser = async(req,res) => {
     const user = await User.create(req.body)
     res.status(201).json({user,msg:"User registered successfully"})
@@ -19,10 +20,10 @@ const loginUser = async(req,res) => {
     if(!isMatch){
         return res.status(401).json({message:"Invalid credentials"})
     }
-    res.status(200).json({user, msg : "Login successful"})
-
-
-
+    else{
+        const token = jwt.sign({userId:user._id},process.env.SECRET_KEY,{expiresIn:"1h"})  // creating the token
+        res.status(200).json({user, msg : "Login successful", token})
+    }
 }
 
 module.exports = {registerUser,loginUser}

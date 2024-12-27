@@ -4,6 +4,8 @@ import { useSnackbar } from 'notistack';
 import {Icon} from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye'
+import {useNavigate} from 'react-router-dom'
+
 const DashBoard = () => {
 
     const [mail,setEmail] = useState("");
@@ -11,6 +13,7 @@ const DashBoard = () => {
     const [type,setType] = useState("password");
     const [icon,setIcon] = useState(eyeOff);
     const [loading,setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const {enqueueSnackbar} = useSnackbar();
 
@@ -34,12 +37,15 @@ const DashBoard = () => {
             await axios.post("http://localhost:8080/login",data)
             enqueueSnackbar("Login Successful",{variant:"success"})
             setLoading(false)
+            setEmail("")
+            setPassword("")
+            navigate("/protected")
+            
         }catch(error){
             setLoading(false)
             enqueueSnackbar("Login Failed",{variant:"error"})
         }
-        setEmail("")
-        setPassword("")
+        
     }
     
 
@@ -70,6 +76,7 @@ const DashBoard = () => {
                 <input value={password} onChange = {(e) => setPassword(e.target.value)} type={type} placeholder="Enter Password " id="password " />
                 <span className="eye" onClick={handleToggle}><Icon icon={icon} size={20} /></span>
             </div>
+            
 
             <button className="sign-button" onClick={handleLogin}>Sign In</button>
             <button className="signUp-button" onClick={handleSignUp}>Sign Up</button>
